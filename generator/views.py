@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.files.base import ContentFile
-from .models import GeneratedImage
+from .models import GeneratedImage, SavedImage
 import torch
 from sentence_transformers import SentenceTransformer
 import torch.nn as nn
@@ -11,6 +11,10 @@ import os
 from django.conf import settings
 from .inference_gfpgan import enhance_image_with_gfpgan
 from django.urls import reverse
+from django.contrib import messages
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import SavedImage
 
 # Define the SentenceEncoder class
 class SentenceEncoder:
@@ -116,7 +120,7 @@ def generate_image(request):
         return redirect('generator:result', image_id=generated_image.id)
     
     #return render(request, 'generator/generate.html')
-    return redirect('index')
+    return redirect('generator:index')
 
 def enhance_image(request, image_id):
     #generated_image = GeneratedImage.objects.get(id=image_id)
@@ -147,6 +151,31 @@ def enhance_image(request, image_id):
     return redirect('generator:result', image_id=generated_image.id)
 
     
+@login_required
+def save_image(request, image_id):
+    """Saves a generated image to the user's saved images."""
+    image = get_object_or_404(GeneratedImage, id=image_id)
+
+    saved_image = SavedImage.objects.create(
+        user=request.user,  # Ensure the correct user is saved
+        enhanced_image=image.enhanced_image,  # Correct field name
+        description=image.description  # Include description
+    )
+
+    messages.success(request, "Image saved successfully!")  # Set success message
+    return redirect(request.META.get("HTTP_REFERER", "home"))  # Redirect to the same page
 
 
 
+
+import logging
+logger = logging.getLogger(__name__)
+def saved_images_view(request):
+    logger.info("Saved Images View is invoked!")  # Log to terminal
+    print("Saved Images View is invoked!")  # Print to console
+
+    saved_images = SavedImage.objects.filter(user=request.user).order_by('-created')
+    if not saved_images.exists():
+        print("No saved images found for the user.")
+
+    return render(request, 'users/inbox.html', {'savedImages': saved_images})

@@ -1,22 +1,31 @@
-{% extends "generator/base.html" %}
+{% extends 'main.html' %}
 
 {% block title %}Generate Faces{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Generate a Face</h3>
-            </div>
-            <div class="card-body">
-                <form method="post" action="{% url 'generator:generate' %}">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <textarea name="input_text" class="form-control" placeholder="Enter face description"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Generate Face</button>
-                </form>
+<div style="margin-top: 80px;">  <!-- Added spacing between navbar and content -->
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-3" style="background-color: #f8f9fa; border-radius: 15px;">
+                <div class="card-header bg-primary text-white text-center" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                    <h3 class="card-title mb-0">Generate a Face</h3>
+                </div>
+                <div class="card-body p-4 d-flex flex-column align-items-center">
+                    <form method="post" action="{% url 'generator:generate' %}" class="w-100">
+                        {% csrf_token %}
+                        <div class="mb-3 text-center">
+                            <textarea name="input_text" class="form-control rounded-3 p-3 text-start w-100"
+                                      placeholder="Enter face description" rows="6"
+                                      style="width: 100%; max-width: 600px; resize: none; border: 1px solid #ccc; border-radius: 10px; padding: 10px;">{% if request.GET.edit %}{{ request.GET.edit }}{% endif %}</textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-lg btn-primary px-4 hover"
+                                    style="border-radius: 8px; transition: background-color 0.3s;">
+                                Generate Face
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

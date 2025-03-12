@@ -1,72 +1,189 @@
-{% extends "generator/base.html" %}
-
+{% extends 'main.html' %}
 {% block title %}Generated Face{% endblock %}
-
 {% block content %}
-<div class="card mb-4">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h3 class="card-title mb-0">Generated Face</h3>
-        <a href="{% url 'generator:index' %}" class="btn btn-outline-primary">Generate New</a>
-    </div>
-    <div class="card-body">
-        
-        <p class="lead"><strong>Description:</strong> "{{ image.description }}"</p>
-        
-        <div class="d-flex align-items-center justify-content-center">
-            <div class="image-grid">
-            <div class="image-container">
-                <img src="{{ image.image.url }}" alt="Generated face" class="generated-image">
-                <div class="mt-2 text-center">
-                    <a href="{{ image.image.url }}" download class="btn btn-sm btn-outline-secondary">Download</a>
-                </div>
-            </div>
-            
-            <div class="image-container">
-                
-                {% if image.id %}
-                    
-                    <a href="{% url 'generator:enhance' image_id %}" class="btn btn-primary" id="enhanceButton">Enhance</a>
+<style type="text/css">
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+    .button-container {
+        text-align: right;
+    }
+    .images-container {
+        display: flex;
+        justify-content: center;
+        gap: 40px; /* Increased gap for better spacing */
+        margin: 30px 0;
+    }
+    .image-box {
+        flex: 0 0 48%;
+        max-width: 48%;
+        text-align: center;
+    }
+    .image-container {
+        padding: 24px;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+    }
+    .image-display {
+        margin-bottom: 20px; /* Consistent spacing before buttons */
+    }
+    .image-display img {
+        width: 320px;
+        height: auto;
+        max-width: 100%;
+        border-radius: 6px; /* Softer rounded corners */
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* Subtle shadow on images */
+    }
+    .buttons-row {
+        display: flex;
+        justify-content: center;
+        gap: 12px; /* Space between buttons */
+    }
+    /* Button styles and effects */
+    .btn {
+        transition: all 0.3s ease;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+    }
+    .btn-light:hover {
+        background-color: #f8f9fa;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .btn-outline-light:hover {
+        background-color: #ffffff;
+        color: #0d6efd;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .btn-outline-dark:hover {
+        background-color: #212529;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .btn-outline-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    /* Make the card bigger with rounder corners */
+    .main-card {
+        max-width: 1000px;
+        margin: 0 auto;
+        border-radius: 12px;
+        overflow: hidden; /* Ensure child elements don't break the border radius */
+    }
+    /* Container with increased top margin */
+    .page-container {
+        margin-top: 60px;
+        margin-bottom: 60px; /* Added bottom margin for balance */
+    }
+    .card-title {
+        font-weight: 600; /* Semi-bold header */
+    }
+    .description-text {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        color: #495057;
+    }
+    .image-title {
+        margin-bottom: 1rem;
+        font-weight: 600;
+        color: #343a40;
+    }
+    .enhance-container {
+        height: 350px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+    
+    @media (max-width: 768px) {
+        .images-container {
+            flex-direction: column;
+            align-items: center;
+        }
+        .image-box {
+            flex: 0 0 100%;
+            max-width: 100%;
+            margin-bottom: 30px;
+        }
+        .header-container {
+            flex-direction: column;
+            text-align: center;
+            gap: 10px;
+        }
+        .button-container {
+            text-align: center;
+        }
+    }
+</style>
 
-                {% endif %}                
-            </div>
-            
-            {% if image.enhanced_image %}
-            
-            <div class="image-container">
-                <img src="{{  image.enhanced_image.url }}" alt="Enhanced Face" class="generated-image">
-                <div class="mt-2 text-center">
-                    <a href="{{ image.enhanced_image.url }}" download class="btn btn-sm btn-outline-secondary">Download</a>
+<div class="container page-container">
+    <div class="card shadow-lg border-0 main-card">
+        <!-- Header Section -->
+        <div class="card-header bg-primary text-white py-3">
+            <div class="header-container">
+                <h3 class="card-title mb-0">Generated Face</h3>
+                <div class="button-container">
+                    <a href="{% url 'generator:index' %}" class="btn btn-light btn-sm mx-1">Generate New</a>
+                    <a href="{% url 'generator:index' %}?edit={{ image.description }}" class="btn btn-outline-light btn-sm">Edit</a>
                 </div>
             </div>
+        </div>
+        
+        <!-- Body Section -->
+        <div class="card-body p-4">
+            <p class="lead text-center description-text"><strong>Description:</strong> "{{ image.description }}"</p>
+            
+            <!-- Images Row (Side by Side) -->
+            <div class="images-container">
+                <!-- Generated Image -->
+                <div class="image-box">
+                    <h5 class="image-title">Generated Image</h5>
+                    <div class="shadow-sm bg-light image-container">
+                        <div class="image-display">
+                            <img src="{{ image.image.url }}" alt="Generated face" class="img-fluid">
+                        </div>
+                        <div class="buttons-row">
+                            <a href="{{ image.image.url }}" download class="btn btn-outline-dark">Download</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Enhanced Image / Enhance Button -->
+                <div class="image-box">
+                    {% if image.enhanced_image %}
+                        <h5 class="image-title">Enhanced Image</h5>
+                        <div class="shadow-sm bg-light image-container">
+                            <div class="image-display">
+                                <img src="{{ image.enhanced_image.url }}" alt="Enhanced Face" class="img-fluid">
+                            </div>
+                            <div class="buttons-row">
+                                <a href="{{ image.enhanced_image.url }}" download class="btn btn-outline-dark">Download</a>
+                                <form action="{% url 'generator:save_image' image.id %}" method="POST" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-success">Save</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% else %}
+                        <h5 class="image-title">Enhance Your Image</h5>
+                        <div class="enhance-container">
+                            <a href="{% url 'generator:enhance' image.id %}" class="btn btn-primary btn-lg px-5 py-3">Enhance Now</a>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
-            {% endif %}
         </div>
     </div>
 </div>
-<!-- <div class="card mb-4">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h3 class="card-title mb-0">Generated Faces</h3>
-        <a href="{% url 'generator:index' %}" class="btn btn-outline-primary">Generate New</a>
-    </div>
-    <div class="card-body">
-        <p class="lead">Description: "{{ description }}"</p>
-        
-        {% if image_paths %}
-        <div class="image-grid">
-            {% for image_path in image_paths %}
-            <div class="image-container">
-                <img src="{{ image_path }}" alt="Generated face" class="generated-image">
-                <div class="mt-2 text-center">
-                    <a href="{{ image_path }}" download class="btn btn-sm btn-outline-secondary">Download</a>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <div class="alert alert-warning">
-            No images were generated. Please try again with a different description.
-        </div>
-        {% endif %}
-    </div>
-</div> -->
 {% endblock %}

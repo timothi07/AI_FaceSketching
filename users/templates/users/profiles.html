@@ -1,0 +1,109 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<main class="home">
+    <!-- Hero Section -->
+    <section class="hero-section text-center">
+        <div class="container container--narrow">
+            <div class="hero-section__box">
+                <h2><span>REKHA</span></h2>
+                <h3>AI Forensic Sketching Artist</h3>
+                <p class="hero-description">
+                    Generate highly realistic forensic sketches from textual descriptions using AI-powered face generation.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <h2 class="section-title text-center">Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="fa fa-magic"></i>
+                    <h4>AI-Powered Image Generation</h4>
+                    <p>Transform detailed descriptions into realistic forensic sketches with high accuracy.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fa fa-image"></i>
+                    <h4>Image Enhancement</h4>
+                    <p>Enhance AI-generated images for improved clarity and forensic accuracy.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fa fa-user-secret"></i>
+                    <h4>Forensic Use Cases</h4>
+                    <p>Utilized for criminal investigations, missing person identification, and sketch-based suspect identification.</p>
+                </div>
+                <div class="feature-item">
+                  <i class="fa fa-floppy-disk"></i> <!-- Save icon -->
+                  <h4>Secure Saving</h4>
+                  <p>Store your generated images safely for easy access and future reference.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fa fa-edit"></i>
+                    <h4>Editable Descriptions</h4>
+                    <p>Modify descriptions and generate updated sketches based on new inputs.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fa fa-clock"></i>
+                    <h4>Fast Processing</h4>
+                    <p>Get high-quality sketches in seconds with our optimized AI model.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #1a1a2e, #16213e);
+        color: white;
+        padding: 60px 20px;
+    }
+    .hero-section__box h2 span {
+        font-size: 7rem;
+        font-weight: bold;
+        color: #ffcc00;
+    }
+    .hero-section__box h3 {
+        font-size: 1.7rem;
+        margin-top: 10px;
+    }
+    .hero-description {
+        font-size: 1.7rem;
+        margin-top: 15px;
+        opacity: 0.8;
+    }
+
+    .features-section {
+        padding: 60px 20px;
+        background: #f8f9fa;
+    }
+    .section-title {
+        font-size: 2rem;
+        margin-bottom: 30px;
+    }
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        text-align: center;
+    }
+    .feature-item {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .feature-item i {
+        font-size: 2rem;
+        color: #ffcc00;
+        margin-bottom: 10px;
+    }
+    .feature-item h4 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock content %}

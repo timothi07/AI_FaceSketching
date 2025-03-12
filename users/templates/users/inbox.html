@@ -1,0 +1,112 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<style>
+    /* General Container */
+    .saved-images-container {
+        max-width: 90%;
+        margin: 40px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    /* Title */
+    .title {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    /* Table Styling */
+    .image-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .image-table th,
+    .image-table td {
+        padding: 15px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .image-table th {
+        background: #f4f4f4;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    /* Image Column */
+    .image-column img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+    }
+
+    .image-column img:hover {
+        transform: scale(1.05);
+    }
+
+    /* Description Column */
+    .description-column {
+        font-size: 14px;
+        color: #444;
+        text-align: left;
+        max-width: 400px;
+        word-wrap: break-word;
+    }
+
+    /* Date Column */
+    .date-column {
+        font-size: 14px;
+        color: #777;
+    }
+
+    /* No Images Message */
+    .no-images {
+        color: #888;
+        font-size: 18px;
+        margin-top: 20px;
+    }
+</style>
+
+<main class="saved-images-container">
+    <div class="content-box">
+        <h2 class="title">Saved Enhanced Images</h2>
+        {% if savedImages %}
+        <table class="image-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Description</th>
+                    <th>Created Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for image in savedImages %}
+                <tr>
+                    <td class="image-column">
+                        <a href="{{ image.enhanced_image.url }}" target="_blank">
+                            <img src="{{ image.enhanced_image.url }}" alt="Enhanced Image" class="image-preview">
+                        </a>
+                    </td>
+                    <td class="description-column">{{ image.description }}</td>
+                    <td class="date-column">{{ image.created }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="no-images">No saved images yet.</p>
+        {% endif %}
+    </div>
+</main>
+
+{% endblock %}
